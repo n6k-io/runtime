@@ -1,9 +1,13 @@
 {
   "name": "@n6k.io/runtime",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "description": "Browser app shell for n6k apps: DuckDB instance, provider stack, page sockets, server pages",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/n6k-io/runtime"
+  },
   "type": "module",
   "files": [
     "src"
