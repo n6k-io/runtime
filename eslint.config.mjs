@@ -16,7 +16,7 @@ export default [
       ],
       complexity: ["error", { max: 20 }],
       "@typescript-eslint/no-unused-vars": "error",
-      // root.tsx references the virtual-module declarations by path so app typechecks see them too.
+      // Virtual-module declarations are referenced by path so app typechecks see them too.
       "@typescript-eslint/triple-slash-reference": [
         "error",
         { path: "always" },

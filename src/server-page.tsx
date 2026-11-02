@@ -65,7 +65,8 @@ export function ServerPage({
   const stateReference = useRef<Record<string, unknown>>({});
   const renderSeq = useRef(0);
 
-  // Renders run concurrently server-side; only the latest request's tree is applied.
+  // Replies may arrive out of order: only the latest request's tree or error surfaces; stale errors
+  // and non-Node replies are dropped silently.
   const requestTree = useCallback(
     async (state: Record<string, unknown>) => {
       if (!rpc) return;
@@ -112,7 +113,7 @@ export function ServerPage({
     if (node.component === "fragment")
       return <Fragment key={key}>{kids}</Fragment>;
     const Comp = resolveComponent(node.component);
-    // `bind` is emitted by n6k-pykit's `_Factory.__call__(key=…)`.
+    // `bind`/`value` contract: n6k-pykit src/n6k_app/frontend.py. A bound node's children are not rendered.
     if (Comp && "bind" in node.props)
       return <BoundControl key={key} Comp={Comp} {...node.props} />;
     return createElement(

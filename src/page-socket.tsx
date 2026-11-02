@@ -57,8 +57,8 @@ export function pageSocketProps(
   return { sockets, databases };
 }
 
-// Exposes the page socket's RPC; `duckdb` must have been built from pageSocketProps(slug, attach),
-// otherwise `rpc` is silently never defined.
+// `duckdb` must have been built from pageSocketProps(slug, attach): without a `slug` socket `rpc` is
+// never defined, and a different `attach` is advertised in context but never attached.
 export function PageSocket({
   duckdb,
   slug,
