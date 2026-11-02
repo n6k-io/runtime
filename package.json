@@ -30,8 +30,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@n6k.io/db": "link:@n6k.io/db",
-    "@n6k.io/ui": "link:@n6k.io/ui",
+    "@n6k.io/db": "^0.12.2",
+    "@n6k.io/ui": "0.10.1",
     "@types/bun": "latest",
     "@types/react": "^19.2.0",
     "eslint": "^10.4.1",
