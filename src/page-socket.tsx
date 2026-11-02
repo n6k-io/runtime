@@ -9,7 +9,7 @@ import type { AttachSpec } from "./attach-spec";
 import { useSocket } from "./use-socket";
 
 type PageSocketValue = {
-  // JSON-RPC over this page's own socket; undefined until FT_HELLO_ACK.
+  // JSON-RPC over this page's own socket; undefined while `slug` is absent from N6kDuckDB's snapshot `registrations`.
   rpc: JsonRpcClient | undefined;
   slug: string;
   attach: Record<string, AttachSpec>;
@@ -35,8 +35,6 @@ function endpointSocket(endpoint: string): SocketSpec {
   };
 }
 
-// One /<slug>/ws socket per distinct endpoint in `attach` plus the page's own,
-// each alias riding its endpoint's socket.
 export function pageSocketProps(
   slug: string,
   attach: Record<string, AttachSpec>,
@@ -59,7 +57,8 @@ export function pageSocketProps(
   return { sockets, databases };
 }
 
-// Exposes the page socket's RPC; `duckdb` must have been built from pageSocketProps(slug, attach).
+// Exposes the page socket's RPC; `duckdb` must have been built from pageSocketProps(slug, attach),
+// otherwise `rpc` is silently never defined.
 export function PageSocket({
   duckdb,
   slug,
@@ -73,6 +72,7 @@ export function PageSocket({
 }) {
   // `attach` is a fresh literal each render; its stable serialization is the dep key.
   const attachKey = JSON.stringify(attach);
+  // Throws during render if the server did not grant `jsonrpc` (RegisteredWebsocket.rpc in @n6k.io/db).
   const rpc = useSocket(duckdb, slug)?.rpc;
   const value = useMemo(
     () => ({ rpc, slug, attach }),

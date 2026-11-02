@@ -10,7 +10,7 @@ export const PageStateContext = createContext<PageStateApi | undefined>(
   undefined,
 );
 
-/** Read/write one bound key of the page's UI state, à la useState. */
+/** Read/write one bound key of the page's UI state. Unlike useState, the setter is new each render and takes no updater. Throws outside <ServerPage>. */
 export function usePageState(key: string): [unknown, (value: unknown) => void] {
   const api = useContext(PageStateContext);
   if (!api) {

@@ -1,4 +1,3 @@
-// One ATTACHed catalog: which endpoint serves it, and its name there. The alias
-// it is ATTACHed as is the key this sits under. Mirrors the FT_HELLO frame — the
-// endpoint picks the data.py namespace, `catalog` picks the Database in it.
+// One ATTACHed catalog, keyed by its alias: `slug` is the endpoint serving it,
+// `catalog` its name there.
 export type AttachSpec = { slug: string; catalog: string };

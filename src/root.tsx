@@ -19,7 +19,8 @@ export function Root({
   attach?: Record<string, AttachSpec>;
   slug?: string;
 }) {
-  // One engine per page load; its sockets and ATTACHes come from this page's `attach`.
+  // One engine per mount. Trap: later `slug`/`attach` changes reach PageSocket's context but not the
+  // engine, so the context advertises catalogs that were never attached and a new `slug` never gets an `rpc`.
   const [duckdb] = useState(
     () =>
       new N6kDuckDB({

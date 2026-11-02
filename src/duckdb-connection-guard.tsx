@@ -18,11 +18,7 @@ export function DuckDBConnectionGuard({
       <AlertDialog.Root open={open}>
         <AlertDialog.Portal>
           <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
-          <AlertDialog.Content
-            // Viewport-relative cap (80vh) — no Tailwind scale token, set inline.
-            style={{ maxHeight: "80vh" }}
-            className="fixed top-1/2 left-1/2 z-50 flex w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-background p-6 ring-1 ring-foreground/10"
-          >
+          <AlertDialog.Content className="fixed top-1/2 left-1/2 z-50 flex max-h-[80vh] w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-background p-6 ring-1 ring-foreground/10">
             <AlertDialog.Title className="text-base font-medium text-destructive">
               Connection Failed
             </AlertDialog.Title>

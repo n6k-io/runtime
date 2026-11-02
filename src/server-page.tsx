@@ -17,9 +17,6 @@ import {
 } from "./page-state";
 import { usePageSocket } from "./page-socket";
 
-/** Client runtime for a server-driven `page.py`: calls the page socket's JSON-RPC `render(state)` and
- *  renders the {component, props, children} tree the server returns. */
-
 type Node = {
   component: string;
   props: Record<string, unknown>;
@@ -43,10 +40,9 @@ function isElementType(v: unknown): v is ElementType {
   return typeof v === "function" || (isRecord(v) && "$$typeof" in v);
 }
 
-// Bridges a state-agnostic control to the page's bound key: reads the current
-// value (falling back to the server's default until first interaction) and
-// writes edits back up. Keeps the control itself ignorant of `usePageState`, so
-// the same component renders in `.mdx` with a plain value/setValue pair.
+// Bridges a state-agnostic control to the page's bound key, falling back to the
+// server-sent `value` while the local value is nullish. Keeps the control
+// ignorant of `usePageState`, so it also renders in `.mdx` with value/setValue.
 function BoundControl({
   Comp,
   ...props
@@ -56,7 +52,8 @@ function BoundControl({
   return <Comp value={local ?? serverValue} setValue={setLocal} {...rest} />;
 }
 
-// `components` is the vocabulary the server's tree names resolve against.
+// `components` is the vocabulary the server's tree names resolve against. A name that doesn't
+// resolve renders as a raw element of that name; "fragment" is reserved for <Fragment>.
 export function ServerPage({
   components,
 }: {
@@ -100,9 +97,7 @@ export function ServerPage({
     [requestTree],
   );
 
-  // Resolve a component name against the vocabulary, walking one dot for
-  // namespaced names: "Static.Metric" → components.Static.Metric (the
-  // presentational twin). Mirrors how MDX resolves <Static.Metric>.
+  // "A.B" resolves components.A.B; segments past the second are ignored.
   function resolveComponent(name: string): ElementType | undefined {
     const [ns, member] = name.split(".");
     const top = components[ns];
@@ -117,10 +112,7 @@ export function ServerPage({
     if (node.component === "fragment")
       return <Fragment key={key}>{kids}</Fragment>;
     const Comp = resolveComponent(node.component);
-    // Interactive controls (Python `g.Slider(key=…)`) serialize with a `bind`.
-    // Controls are state-agnostic (value/setValue); the adapter reads/writes the
-    // bound key so the same control also works in `.mdx` (which passes
-    // value/setValue directly, no bind).
+    // `bind` is emitted by n6k-pykit's `_Factory.__call__(key=…)`.
     if (Comp && "bind" in node.props)
       return <BoundControl key={key} Comp={Comp} {...node.props} />;
     return createElement(
