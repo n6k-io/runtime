@@ -1,12 +1,46 @@
 {
-  "name": "runtime",
-  "module": "index.ts",
+  "name": "@n6k.io/runtime",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Browser app shell for n6k apps: DuckDB instance, provider stack, page sockets, server pages",
+  "license": "MIT",
   "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./attach-spec": "./src/attach-spec.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "fmt": "prettier --write --log-level=warn .",
+    "check": "bun run fmt && bun run lint --fix && bun run typecheck",
+    "fmt:check": "prettier --check .",
+    "ci": "bun run fmt:check && bun run lint && bun run typecheck && bun test"
   },
   "peerDependencies": {
-    "typescript": "^7"
+    "@n6k.io/db": "*",
+    "@n6k.io/ui": "*",
+    "radix-ui": "^1.4.3",
+    "react": "^19.2.4",
+    "typescript": "^5 || ^6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@n6k.io/db": "link:@n6k.io/db",
+    "@n6k.io/ui": "link:@n6k.io/ui",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.0",
+    "eslint": "^10.4.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-unicorn": "^65.0.1",
+    "prettier": "^3.8.1",
+    "radix-ui": "^1.4.3",
+    "react": "^19.2.7",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.61.0"
   }
 }
