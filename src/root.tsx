@@ -1,6 +1,5 @@
 /// <reference path="./virtual-modules.d.ts" />
 import { useState, type ReactNode } from "react";
-import { duckdbWorkerUrl, wsWorkerUrl } from "virtual:n6k-workers";
 import { duckdbBundle } from "virtual:n6k-duckdb-bundle";
 import { N6kDuckDB } from "@n6k.io/db";
 import { DuckDBProvider, QueryProvider } from "@n6k.io/ui/duckdb";
@@ -25,8 +24,6 @@ export function Root({
     () =>
       new N6kDuckDB({
         bundle: duckdbBundle,
-        duckdbWorkerUrl,
-        wsWorkerUrl,
         ...pageSocketProps(slug, attach),
       }),
   );
