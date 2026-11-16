@@ -33,9 +33,10 @@
     "typescript": "^5 || ^6"
   },
   "devDependencies": {
+    "@duckdb/duckdb-wasm": "1.33.1-dev114.0",
     "@eslint/js": "^10.0.1",
     "@n6k.io/db": "^0.13.3",
-    "@n6k.io/ui": "0.10.1",
+    "@n6k.io/ui": "0.11.0",
     "@types/bun": "latest",
     "@types/react": "^19.2.0",
     "eslint": "^10.4.1",
