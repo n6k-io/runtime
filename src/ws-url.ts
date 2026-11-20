@@ -8,5 +8,5 @@ export function wsUrl(url: string): string {
       `${JSON.stringify(url)} is not a ws(s):// or n6k(s):// URL`,
     );
   const scheme = m[1] === "n6ks" ? "wss" : "ws";
-  return `${scheme}://${m[2]}/ws${m[3] ?? ""}`;
+  return `${scheme}://${m[2]!.replace(/\/+$/, "")}/ws${m[3] ?? ""}`;
 }

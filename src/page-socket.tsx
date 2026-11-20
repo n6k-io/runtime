@@ -52,7 +52,8 @@ export function pageSocketProps(
   // URL socket keys contain "://", so they never collide with a slug.
   for (const [alias, spec] of Object.entries(attach)) {
     const key = "url" in spec ? wsUrl(spec.url) : spec.slug;
-    sockets[key] ??= "url" in spec ? urlSocket(key) : endpointSocket(key);
+    if (!Object.hasOwn(sockets, key))
+      sockets[key] = "url" in spec ? urlSocket(key) : endpointSocket(key);
     databases[alias] = { socket: key, catalog: spec.catalog };
   }
 
