@@ -1,6 +1,6 @@
 {
   "name": "@n6k.io/runtime",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "private": false,
   "description": "Browser app shell for n6k apps: DuckDB instance, provider stack, page sockets, server pages",
   "license": "MIT",
@@ -14,7 +14,8 @@
   ],
   "exports": {
     ".": "./src/index.ts",
-    "./attach-spec": "./src/attach-spec.ts"
+    "./attach-spec": "./src/attach-spec.ts",
+    "./ws-url": "./src/ws-url.ts"
   },
   "scripts": {
     "test": "bun test",

@@ -70,4 +70,30 @@ describe("pageSocketProps", () => {
     connect("index");
     expect(https).toEqual(["wss://example.com/index/ws"]);
   });
+
+  it("routes url entries over one socket per normalized URL", () => {
+    const { sockets, databases } = pageSocketProps("p", {
+      own: { slug: "p", catalog: "x" },
+      foo: { url: "n6k://h:1", catalog: "bar" },
+      baz: { url: "ws://h:1/ws", catalog: "baz" },
+      sec: { url: "n6ks://s/pre", catalog: "sec" },
+    });
+    expect(Object.keys(sockets).toSorted()).toEqual([
+      "p",
+      "ws://h:1/ws",
+      "wss://s/pre/ws",
+    ]);
+    expect(databases).toEqual({
+      own: { socket: "p", catalog: "x" },
+      foo: { socket: "ws://h:1/ws", catalog: "bar" },
+      baz: { socket: "ws://h:1/ws", catalog: "baz" },
+      sec: { socket: "wss://s/pre/ws", catalog: "sec" },
+    });
+
+    const opened = stubBrowser("https:", "example.com");
+    const spec = sockets["wss://s/pre/ws"]!;
+    if (!("connect" in spec)) throw new Error("expected connect spec");
+    spec.connect();
+    expect(opened).toEqual(["wss://s/pre/ws"]);
+  });
 });

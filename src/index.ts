@@ -7,3 +7,4 @@ export { DuckDBConnectionGuard } from "./duckdb-connection-guard";
 export { ConnectionLost } from "./connection-lost";
 export { useSocket } from "./use-socket";
 export type { AttachSpec } from "./attach-spec";
+export { wsUrl } from "./ws-url";

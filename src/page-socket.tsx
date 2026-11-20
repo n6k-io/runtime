@@ -7,6 +7,7 @@ import type {
 } from "@n6k.io/db";
 import type { AttachSpec } from "./attach-spec";
 import { useSocket } from "./use-socket";
+import { wsUrl } from "./ws-url";
 
 type PageSocketValue = {
   // JSON-RPC over this page's own socket; undefined while `slug` is absent from N6kDuckDB's snapshot `registrations`.
@@ -35,6 +36,10 @@ function endpointSocket(endpoint: string): SocketSpec {
   };
 }
 
+function urlSocket(url: string): SocketSpec {
+  return { connect: () => new WebSocket(url), token: "" };
+}
+
 export function pageSocketProps(
   slug: string,
   attach: Record<string, AttachSpec>,
@@ -42,16 +47,13 @@ export function pageSocketProps(
   sockets: Record<string, SocketSpec>;
   databases: Record<string, DatabaseSpec>;
 } {
-  const endpoints = new Set<string>([slug]);
-  for (const spec of Object.values(attach)) endpoints.add(spec.slug);
-
-  const sockets: Record<string, SocketSpec> = {};
-  for (const endpoint of endpoints)
-    sockets[endpoint] = endpointSocket(endpoint);
-
+  const sockets: Record<string, SocketSpec> = { [slug]: endpointSocket(slug) };
   const databases: Record<string, DatabaseSpec> = {};
+  // URL socket keys contain "://", so they never collide with a slug.
   for (const [alias, spec] of Object.entries(attach)) {
-    databases[alias] = { socket: spec.slug, catalog: spec.catalog };
+    const key = "url" in spec ? wsUrl(spec.url) : spec.slug;
+    sockets[key] ??= "url" in spec ? urlSocket(key) : endpointSocket(key);
+    databases[alias] = { socket: key, catalog: spec.catalog };
   }
 
   return { sockets, databases };
